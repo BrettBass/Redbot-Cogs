@@ -1,0 +1,21 @@
+When does is a card delt
+    1. When a guess has been made
+
+When do the options players have for guessing change
+    1. When there are no cards in play a player only has two options smoke or fire
+    2. When there are cards in play a player has five options smoke, fire, higher, lower, same card
+
+When can a player pass or choose to continue
+    1. If the turn is continued from a previous turn the player must make 3 correct guesses
+    2. If a player has chosen to continue then they can pass whenever they want while they make correct guesses
+    3. If a guess is missed then 4 new correct guesses must be made
+    4. If it's new game then 4 correct guesses must be made
+    5. If a player correctly guesses same card then they can pass
+
+How many drinks are owed
+    1. Drinks correspond to the number of cards in play
+    2. If a player correctly guesses same card then every other player owes 1 shot and the drink in total continue to the next player
+
+When does the game end
+    The game ends whenever the current player types 'quit' during their turn
+
