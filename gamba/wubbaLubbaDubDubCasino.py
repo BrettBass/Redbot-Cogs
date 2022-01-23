@@ -147,5 +147,95 @@ class wubba(commands.Cog):
             await msg.edit(content="Cancelled")
             return
     
-    
+    @commands.group(autohelp=False, invoke_without_command=True, aliases=[currency[0]])
+    async def blemflark(self, ctx):
+        """
+        BlemFlarks
+        """
+        if await self.loop.create_task(wubba.invalid_chanel(self, ctx)) or self.config.memeber(ctx.author).banned(): return
+
+        cooldown_target = await self.config.guild(ctx.guild).cooldown_target()
+        time_remaining = round(cooldown_target - time.time())
+
+        if time_remaining > 0:
+            await ctx.reply(f"Time remaining: {datetime.timedelta(seconds=time_remaining)}")
+            return
         
+        cooldown_target = (random.randint(1800, 3600) + time.time())
+        time_remaining = round(cooldown_target - time.time())
+        await self.config.guild(ctx.guild).cooldown_target.set(cooldown_target)
+
+        await ctx.reply(file=discord.File("/home/redbot/.local/share/Red-DiscordBot/data/default/cogs/CogManager/cogs/gamba/nancy-kerrigan.gif"))
+        user_currency_counter = await self.config.member(ctx.author).blemflarks()
+        user_currency_counter += 5
+        await self.config.member(ctx.author).blemflarks.set(user_currency_counter)
+
+        self.loop.create_task(wubba.blemflarks(self, ctx, ctx.author))
+
+    async def paybot(self, ctx, amount: int):
+        bot_member = ctx.guild.get_member(self.bot.user.id)
+        bot_blemflarks = await self.config.member(bot_member).blemflarks()
+        await self.config.member(bot_member).blemflarks.set(bot_blemflarks + amount)
+    
+    @commands.command(currency + 's', usage="<optional: user> <optional: server ID>")
+    async def blemflarks(self, ctx, user: Optional[discord.Member]):
+        """
+        Find out how many BlemFlarks you or someone else has
+        """
+        if ( await self.config.member(ctx.author).banned() or 
+             await self.loop.create_task(wubba.invalid_chanel(self, ctx)) ): return
+            
+        if ctx.guild is None:
+            await ctx.reply("Unavailable in DM's")
+            return
+        
+        if user is None: user = ctx.author
+        elif user is int: user = await self.bot.fetch_user(user)
+
+        colors = [0xb00b69, 0xff0303, 0xffe70a, 0xc2ff0a, 0x0aff1f, 0x0affeb, 0x0a47ff, 0x7141b5, 0xff00f2]
+        selectedColor = random.choice(colors)
+        embed = discord.Embed(description=f"{user.name}'s BlemFlarks:", colour=selectedColor)
+
+        user_currency_counter = await self.config.member(user).blemflarks()
+
+        if user_currency_counter == 0:
+            await ctx.reply(f"{user.name}, you're broke as shit dawg")
+            return
+        if user_currency_counter < 0:
+            await ctx.reply(f"{user.name}, you fucking owe money dawg")
+            return
+        
+        embed.add_field(name=currency + 's', value=user_currency_counter)
+        await ctx.reply(embed=embed)
+
+    @blemflark.command(aliases=["lb"])
+    async def leaderboard(self, ctx):
+        pass
+        
+    @blemflark.command()
+    async def gringotts(self, ctx):
+        """
+        Get your daily interest by using Gringotts™ Bank
+        """
+        if ( await self.config.member(ctx.author).banned() or 
+             await self.loop.create_task(wubba.invalid_chanel(self, ctx)) ): return
+        
+        interest_cooldown_target = await self.config.member(ctx.author).interest_cooldown_target()
+        time_remaining = round(interest_cooldown_target - time.time())
+        user_blemflarks = await self.config.member(ctx.author).blemflarks()
+        
+
+        if time_remaining > 0:
+            await ctx.reply(f"Time remaining: {datetime.timedelta(seconds=time_remaining)}")
+            return
+        
+        interest_cooldown_tarkget = (86400 + time.time())
+        await self.config.member(ctx.author).interest_cooldown_target.set(interest_cooldown_tarkget)
+
+        rate = random.randint(5,10)
+        interest = int(user_blemflarks * rate / 100)
+        user_blemflarks += interest if interest > 0 else 1
+
+        await self.config.member(ctx.author).blemflarks.set(user_blemflarks)
+        await ctx.reply(f"""You have received {interest} {currency} {'s' if interest > 1 else ''} from Gringotts™ Bank. Today's interest rate was {rate}%. 
+                        Thank you for trusting Gringotts™ Bank.""")
