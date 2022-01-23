@@ -163,7 +163,7 @@ def start_game(dict):
             if player.check_bust():
                 player.status["loss"][player.active_hand] = True
                 player.next_hand()
-                #DUCK
+                #TODO
                 #Print some bust message. EXAMPLE "you fucking lost via bust, tuff shit"
                 continue
             
@@ -177,14 +177,14 @@ def start_game(dict):
             
             msg += "."
 
-            #DUCK
+            #TODO
             # I need you to print:
             # {player.user.id}: {player.hand.value}
             # "dealer is showing: " {dealer.first_card()}
             #  {msg}
             print(msg)
 
-            #DUCK
+            #TODO
             # get players input, should be one of the following below
             # if you want, it's defaulted to stand if they give a bs input
             # if they try to split or double when they're not allowed to it'll
