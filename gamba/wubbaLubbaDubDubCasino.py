@@ -15,10 +15,8 @@ from .quackjack import quackjack
 
 currency = "Blemflarck"
 
+# wubba lubba dub dub Casino is a place for pure degeneracy
 class wubba(commands.Cog):
-    """
-    wubba lubba dub dub Casino is a place for pure degeneracy
-    """
     __author__ = ["Brett Bass"]
     __version__ = ["1.0.0"]
 
@@ -33,20 +31,16 @@ class wubba(commands.Cog):
     @commands.group(alias=["wc"])
     async def wubba(self, ctx):
         pass
-
+    
+    #Blacklist a user from the wubba lubba dub dub Casino
     @wubba.command(usage="<User>", aliases=["ban"])
     async def blacklist(self, ctx, user:discord.Member):
-        """
-        Blacklist a user from the wubba lubba dub dub Casino
-        """
         await self.config.member(user).banned.set(True)
         await ctx.reply(f"{user.name} has been blacklisted from the wubba lubba dub dub Casino")
     
+    #Whitelist a user from the wubba lubba dub dub Casino
     @wubba.command(usage="<User>", aliases=["unban"])
     async def whitelist(self, ctx, user:discord.Member):
-        """
-        Whitelist a user from the wubba lubba dub dub Casino
-        """
         await self.config.member(user).banned.set(False)
         await ctx.reply(f"{user.name} can now enter/gamble at wubba lubba dub dub Casino without being shot")
     
@@ -54,11 +48,9 @@ class wubba(commands.Cog):
     async def gambaChannels(self, ctx):
         pass
 
+    #Add gamba channels
     @gambaChannels.command(usage="<text channels (space seperated)>")
     async def add(self, ctx, *channels:discord.TextChannel):
-        """
-        Add gamba channels
-        """
         gambaChannels = await self.config.guild(ctx.guild).gambaChannels()
         channels_added = ""
         
@@ -69,11 +61,9 @@ class wubba(commands.Cog):
         await self.config.guild(ctx.guild).gambaChannels.set(gambaChannels)
         await ctx.reply(f"Added {channels_added} to gamba channel list")
     
+    #Remove gamba channels
     @gambaChannels.command(usage="<text channels (space seperated)>")
     async def remove(self, ctx, *channels:discord.TextChannel):
-        """
-        Remove gamba channels
-        """
         gambaChannels = await self.config.guild(ctx.guild).gambaChannels()
         channels_removed = ""
         not_found = ""
@@ -92,11 +82,9 @@ class wubba(commands.Cog):
             await ctx.send(f"channel{'s' if len(not_found) > 1 else ''} {not_found} not in gamba channel")
     
 
+    #Display Gamba Channels
     @gambaChannels.command()
     async def list(self, ctx):
-        """
-        Display Gamba Channels
-        """
         gambaChannels = await self.config.guild(ctx.guild).gambaChannels()
         channels_list = ""
         
@@ -127,11 +115,9 @@ class wubba(commands.Cog):
 
     #     return innerCheck
 
+    #Resets all users BlemFlarks to 10
     @wubba.command()
     async def resetAll(self, ctx):
-        """
-        Resets all users BlemFlarks to 10
-        """
         msg = await ctx.send(f"Are you sure you want to reset ***__all__*** users {currency}s? [Confirm/Cancel]")
 
         try:
@@ -147,11 +133,10 @@ class wubba(commands.Cog):
             await msg.edit(content="Cancelled")
             return
     
+    #User currency
     @commands.group(autohelp=False, invoke_without_command=True, aliases=[currency[0]])
     async def blemflark(self, ctx):
-        """
-        BlemFlarks
-        """
+
         if await self.loop.create_task(wubba.invalid_chanel(self, ctx)) or self.config.memeber(ctx.author).banned(): return
 
         cooldown_target = await self.config.guild(ctx.guild).cooldown_target()
@@ -177,11 +162,10 @@ class wubba(commands.Cog):
         bot_blemflarks = await self.config.member(bot_member).blemflarks()
         await self.config.member(bot_member).blemflarks.set(bot_blemflarks + amount)
     
+    #Find out how many BlemFlarks you or someone else has
     @commands.command(currency + 's', usage="<optional: user> <optional: server ID>")
     async def blemflarks(self, ctx, user: Optional[discord.Member]):
-        """
-        Find out how many BlemFlarks you or someone else has
-        """
+
         if ( await self.config.member(ctx.author).banned() or 
              await self.loop.create_task(wubba.invalid_chanel(self, ctx)) ): return
             
@@ -212,11 +196,10 @@ class wubba(commands.Cog):
     async def leaderboard(self, ctx):
         pass
         
+    #Get your daily interest by using Gringotts™ Bank
     @blemflark.command()
     async def gringotts(self, ctx):
-        """
-        Get your daily interest by using Gringotts™ Bank
-        """
+
         if ( await self.config.member(ctx.author).banned() or 
              await self.loop.create_task(wubba.invalid_chanel(self, ctx)) ): return
         
@@ -240,11 +223,10 @@ class wubba(commands.Cog):
         await ctx.reply(f"""You have received {interest} {currency} {'s' if interest > 1 else ''} from Gringotts™ Bank. Today's interest rate was {rate}%. 
                         Thank you for trusting Gringotts™ Bank.""")
 
+    #Owner command to manually change blemflark amount of whatever user
     @wubba.command(usage="<User> <BlemFlark Amount>")
     async def setBlemFlarks(self, ctx, user: discord.Member, amount: int):
-        """
-        owner command to manually change blemflark amount
-        """
+
         if ctx.guild is None:
             await ctx.send("Unavailable in DM's")
             return
@@ -252,11 +234,10 @@ class wubba(commands.Cog):
         await self.config.memeber(user).blemflarks.set(amount)
         await ctx.reply("done.")
 
+    #Pay a user with some of your hard earned blemflarks
     @blemflark.command(usage="<User> <Amount>", aliases=['p', "transfer", "spreadit"], autohelp=False)
     async def pay(self, ctx, recipient: discord.Member, amount: int):
-        """
-        Pay a user with some of your hard earned blemflarks
-        """
+
         try:
             if self.game_session_active[ctx.author.id]:
                 await ctx.reply("Not during game bitch.")
