@@ -91,3 +91,61 @@ class wubba(commands.Cog):
         if not_found != "":
             await ctx.send(f"channel{'s' if len(not_found) > 1 else ''} {not_found} not in gamba channel")
     
+
+    @gambaChannels.command()
+    async def list(self, ctx):
+        """
+        Display Gamba Channels
+        """
+        gambaChannels = await self.config.guild(ctx.guild).gambaChannels()
+        channels_list = ""
+        
+        for channel in gambaChannels:
+            channels_list += f"{channel} "
+        
+        await ctx.reply(f"Gamba Channels: {channels_list}")
+    
+    async def invalid_chanel(self, ctx):
+        if ctx.channel.name not in await self.config.guild(ctx.guild).gambaChannels():
+            await ctx.message.delete()
+            await ctx.send("<:cuttingdownoneggplant:893273818364276736>")
+            return True
+        else:
+            return False
+    
+    def reset_check(author):
+        return lambda message: (message.author == author and 
+                                ( message.content.lower() == "confirm" or
+                                  message.content.lower() == "cancel" ))
+    
+    # def reset_check(author):
+    #     def innerCheck(message):
+    #         if message.author != author:
+    #             return False
+    #         if message.content.lower() == "confirm" or message.content.lower() == "cancel":
+    #             return True
+
+    #     return innerCheck
+
+    @wubba.command()
+    async def resetAll(self, ctx):
+        """
+        Resets all users BlemFlarks to 10
+        """
+        msg = await ctx.send(f"Are you sure you want to reset ***__all__*** users {currency}s? [Confirm/Cancel]")
+
+        try:
+            response = await self.bot.wait_for('message', check=wubba.reset_check(ctx.author), timeout=60)
+        except asyncio.TimeoutError:
+            await msg.edit(content="Timed out")
+        
+        if response.content.lower() == "confirm":
+            await self.config.clear_all_members()
+            await self.config.guild(ctx.guild).coolDown.set(0)
+            await ctx.send(f"All users {currency}s have been reset")
+        else:
+            await msg.edit(content="Cancelled")
+            return
+    
+    
+        
