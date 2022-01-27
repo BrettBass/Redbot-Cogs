@@ -8,7 +8,7 @@ import asyncio
 import time, datetime
 from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
-from .quackjack import quackjack
+from .blackjack import blackjack
 #from .blackjack.blackjack import *
 #from .blackjack.user import *
 #from .blackjack.Card import *
