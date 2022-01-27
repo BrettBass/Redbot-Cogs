@@ -231,7 +231,7 @@ class wubba(commands.Cog):
             await ctx.send("Unavailable in DM's")
             return
         
-        await self.config.memeber(user).blemflarks.set(amount)
+        await self.config.memeber(user).Blemflarks.set(amount)
         await ctx.reply("done.")
 
     #Pay a user with some of your hard earned blemflarks
